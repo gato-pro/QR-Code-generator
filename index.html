@@ -16,22 +16,27 @@
 
 <div class="app">
 
-<h1>QR Code Generator</h1>
+<div class="topbar">
+<h1>QR Generator</h1>
+<button id="themeToggle">
+            <img id="themeIcon" src="SVG/sun.svg" alt="Theme icon" width="24" height="24">
+        </button>
+</div>
 
-<input id="text" type="text" placeholder="Enter text or URL">
+<input id="text" type="text" placeholder="Paste link or text">
 
 <label>QR Color</label> <input type="color" id="qrColor" value="#111111">
 
-<label>Background Color</label> <input type="color" id="bgColor" value="#ffffff">
+<label>Background</label> <input type="color" id="bgColor" value="#ffffff">
 
-<label>QR Style</label> <select id="qrStyle">
+<label>Style</label> <select id="qrStyle">
 
-<option value="rounded">Modern Rounded</option>
-<option value="square">Classic Square</option>
 <option value="dots">Smooth Dots</option>
+<option value="rounded">Rounded</option>
+<option value="square">Square</option>
 </select>
 
-<button id="generateBtn">Generate QR</button>
+<button id="generateBtn">Generate</button>
 
 <div id="qr-container"></div>
 
