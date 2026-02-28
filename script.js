@@ -6,7 +6,7 @@ const bgColorInput = document.getElementById("bgColor");
 const styleInput = document.getElementById("qrStyle");
 
 // base size for QR, CSS will scale it down on small viewports
-const BASE_SIZE = 330;
+const BASE_SIZE = 300;
 const qr = new QRCodeStyling({
     width: BASE_SIZE,
     height: BASE_SIZE,
