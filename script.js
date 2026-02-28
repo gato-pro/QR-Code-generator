@@ -5,7 +5,9 @@ const qrColorInput = document.getElementById("qrColor");
 const bgColorInput = document.getElementById("bgColor");
 const styleInput = document.getElementById("qrStyle");
 
+// create qr with temporary size; will be resized later for responsiveness
 const qr = new QRCodeStyling({
+// initial values, will be overridden by resizeQR()
 width:350,
 height:350,
 type:"svg",
@@ -34,12 +36,25 @@ type:"dot"
 
 qr.append(container);
 
-function updateQR(){
+// responsive helper: adjust qr size based on container width
+function resizeQR(){
+    const cw = container.clientWidth;
+    const size = Math.min(cw, 350);
+    qr.update({ width: size, height: size });
+}
 
-const text=textInput.value.trim();
-const qrColor=qrColorInput.value;
-const bgColor=bgColorInput.value;
-const style=styleInput.value;
+// apply on load and when the window resizes
+resizeQR();
+window.addEventListener("resize", resizeQR);
+
+function updateQR(){
+    // also adjust size when user updates QR (useful if container changed)
+    resizeQR();
+
+    const text=textInput.value.trim();
+    const qrColor=qrColorInput.value;
+    const bgColor=bgColorInput.value;
+    const style=styleInput.value;
 
 let dotsType="dots";
 let squareType="extra-rounded";
@@ -87,11 +102,23 @@ styleInput.addEventListener("change", updateQR);
 
 /* Download */
 
-document.getElementById("downloadBtn").onclick=function(){
-qr.download({
-name:"qr-code",
-extension:"png"
-});
+// produce a high-resolution image for download by temporarily enlarging
+const downloadBtn = document.getElementById("downloadBtn");
+downloadBtn.onclick = async function(){
+    // compute current (rendered) size
+    const currentSize = Math.min(container.clientWidth, 350);
+    const highSize = currentSize * 5; // 5× scale for sharpness
+
+    // update and download PNG
+    qr.update({ width: highSize, height: highSize });
+    await qr.download({ name: "qr-code", extension: "png" });
+
+    // restore original size and re‑layout
+    qr.update({ width: currentSize, height: currentSize });
+    resizeQR();
+
+    // also offer SVG by default for vector quality
+    // note: users can rename the file to .svg if they prefer an editable vector.
 };
 
 /* Dark mode */

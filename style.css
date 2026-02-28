@@ -56,13 +56,17 @@ background:black;
 
 #qr-container{
 margin-top:20px;
-display:flex;
+display:grid;
 justify-content:center;
+place-items: middle;
+width:100%;          /* allow child to shrink with layout */
+overflow:hidden;     /* prevent overflow on small screens */
 }
 
 #qr-container svg{
 max-width:100%;
-height:auto;
+width:100% !important;  /* force svg to fill container */
+height:auto !important;
 }
 
 /* Dark mode */
