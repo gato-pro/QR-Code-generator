@@ -5,8 +5,13 @@ const qrColorInput = document.getElementById("qrColor");
 const bgColorInput = document.getElementById("bgColor");
 const styleInput = document.getElementById("qrStyle");
 
-// base size for QR, CSS will scale it down on small viewports
-const BASE_SIZE = 350;
+// responsive base size for QR - adapts to device width
+function getBaseSize() {
+    // Use 75% of viewport width to account for all margins/padding, cap at 300px
+    return Math.min(Math.max(100, window.innerWidth * 0.75), 300);
+}
+
+const BASE_SIZE = getBaseSize();
 const qr = new QRCodeStyling({
     width: BASE_SIZE,
     height: BASE_SIZE,
@@ -60,7 +65,7 @@ dotType="dot";
 }
 
 qr.update({
-data:text || "https://github.com",
+data:text || "https://github.com/gato-pro",
 dotsOptions:{
 color:qrColor,
 type:dotsType
@@ -87,20 +92,40 @@ qrColorInput.addEventListener("input", updateQR);
 bgColorInput.addEventListener("input", updateQR);
 styleInput.addEventListener("change", updateQR);
 
+/* Handle window resize for responsive QR sizing */
+window.addEventListener("resize", function() {
+    const newSize = getBaseSize();
+    qr.update({ width: newSize, height: newSize });
+});
+
 /* Download */
 
 // produce a high-resolution image for download by temporarily enlarging
 const downloadBtn = document.getElementById("downloadBtn");
 downloadBtn.onclick = async function(){
     // compute high resolution based on base size
-    const highSize = BASE_SIZE * 5; // 5× scale for sharpness
+    const highSize = BASE_SIZE * 7; // 5× scale for sharpness
+    const highMargin = 210; // increased margin for more white space
 
-    // update and download PNG
-    qr.update({ width: highSize, height: highSize });
+    // update with high resolution and increased margin
+    qr.update({ 
+        width: highSize, 
+        height: highSize,
+        margin: highMargin,
+        imageOptions: {
+            borderRadius: 40,
+            margin: 0
+        }
+    });
     await qr.download({ name: "qr-code", extension: "png" });
 
-    // restore original base size
-    qr.update({ width: BASE_SIZE, height: BASE_SIZE });
+    // restore original base size and margin
+    qr.update({ 
+        width: BASE_SIZE, 
+        height: BASE_SIZE,
+        margin: 20,
+        
+    });
 
     // also offer SVG by default for vector quality
     // note: users can rename the file to .svg if they prefer an editable vector.

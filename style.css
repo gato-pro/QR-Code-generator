@@ -63,18 +63,29 @@ background:black;
 
 #qr-container{
     margin-top:20px;
-    display:flex;            /* simpler layout */
-    justify-content:center;
-    align-items:center;
-    width:100%;              /* allow child to shrink with layout */
-    /* no overflow clip so SVG scales naturally */
+    margin-bottom:20px;
+    display:grid;
+    place-items: center;
+    width:100%;
+    aspect-ratio:1;
+    background:inherit;
+    line-height:0;
 }
 
+
+
+
 #qr-container svg{
-max-width:100%;
-width:100% !important;  /* force svg to fill container */
-height:auto !important;
-}
+    display:grid;
+    place-items:middle;
+    place-content: middle;
+    justify-content: middle;
+    border-radius:7px;
+    z-index: 999;
+    margin: 0px !important ;
+    padding:0px !important ;
+    position: relative;
+} 
 
 /* Dark mode */
 
