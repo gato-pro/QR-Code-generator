@@ -1,10 +1,17 @@
+/* make width calculations easier on small screens */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body{
-font-family: system-ui, -apple-system, Arial;
-background:#f3f4f6;
-margin:0;
-padding:20px;
-display:flex;
-justify-content:center;
+    font-family: system-ui, -apple-system, Arial;
+    background:#f3f4f6;
+    margin:0;
+    padding:20px;
+    display:flex;
+    justify-content:center;
 }
 
 .app{
@@ -55,12 +62,12 @@ background:black;
 }
 
 #qr-container{
-margin-top:20px;
-display:grid;
-justify-content:center;
-place-items: middle;
-width:100%;          /* allow child to shrink with layout */
-overflow:hidden;     /* prevent overflow on small screens */
+    margin-top:20px;
+    display:flex;            /* simpler layout */
+    justify-content:center;
+    align-items:center;
+    width:100%;              /* allow child to shrink with layout */
+    /* no overflow clip so SVG scales naturally */
 }
 
 #qr-container svg{

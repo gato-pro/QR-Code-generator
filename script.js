@@ -5,14 +5,14 @@ const qrColorInput = document.getElementById("qrColor");
 const bgColorInput = document.getElementById("bgColor");
 const styleInput = document.getElementById("qrStyle");
 
-// create qr with temporary size; will be resized later for responsiveness
+// base size for QR, CSS will scale it down on small viewports
+const BASE_SIZE = 350;
 const qr = new QRCodeStyling({
-// initial values, will be overridden by resizeQR()
-width:350,
-height:350,
-type:"svg",
-data:"https://github.com/gato-pro",
-margin:20,
+    width: BASE_SIZE,
+    height: BASE_SIZE,
+    type:"svg",
+    data:"https://github.com/gato-pro",
+    margin:20,
 
 dotsOptions:{
 color:"#111111",
@@ -36,21 +36,8 @@ type:"dot"
 
 qr.append(container);
 
-// responsive helper: adjust qr size based on container width
-function resizeQR(){
-    const cw = container.clientWidth;
-    const size = Math.min(cw, 350);
-    qr.update({ width: size, height: size });
-}
-
-// apply on load and when the window resizes
-resizeQR();
-window.addEventListener("resize", resizeQR);
 
 function updateQR(){
-    // also adjust size when user updates QR (useful if container changed)
-    resizeQR();
-
     const text=textInput.value.trim();
     const qrColor=qrColorInput.value;
     const bgColor=bgColorInput.value;
@@ -105,17 +92,15 @@ styleInput.addEventListener("change", updateQR);
 // produce a high-resolution image for download by temporarily enlarging
 const downloadBtn = document.getElementById("downloadBtn");
 downloadBtn.onclick = async function(){
-    // compute current (rendered) size
-    const currentSize = Math.min(container.clientWidth, 350);
-    const highSize = currentSize * 5; // 5× scale for sharpness
+    // compute high resolution based on base size
+    const highSize = BASE_SIZE * 5; // 5× scale for sharpness
 
     // update and download PNG
     qr.update({ width: highSize, height: highSize });
     await qr.download({ name: "qr-code", extension: "png" });
 
-    // restore original size and re‑layout
-    qr.update({ width: currentSize, height: currentSize });
-    resizeQR();
+    // restore original base size
+    qr.update({ width: BASE_SIZE, height: BASE_SIZE });
 
     // also offer SVG by default for vector quality
     // note: users can rename the file to .svg if they prefer an editable vector.
